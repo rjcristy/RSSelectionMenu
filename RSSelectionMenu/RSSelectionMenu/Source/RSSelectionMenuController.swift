@@ -206,6 +206,9 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
     
     /// Done button
     fileprivate func setDoneButton() {
+        guard navigationItem.rightBarButtonItem == nil else {
+            return
+        }
         let doneTitle = (self.rightBarButtonTitle != nil) ? self.rightBarButtonTitle! : doneButtonTitle
         let doneButton = UIBarButtonItem(title: doneTitle, style: .done, target: self, action: #selector(doneButtonTapped))
         navigationItem.rightBarButtonItem = doneButton
