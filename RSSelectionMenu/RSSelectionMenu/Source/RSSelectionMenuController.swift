@@ -30,6 +30,9 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
     // MARK: - Views
     public var tableView: RSSelectionTableView<T>?
     
+    //dismis ---MC
+    public var dismissEnabled:Bool = true
+    
     /// SearchBar
     public var searchBar: UISearchBar? {
         return tableView?.searchControllerDelegate?.searchBar
@@ -55,7 +58,11 @@ open class RSSelectionMenu<T>: UIViewController, UIPopoverPresentationController
             self.tableView?.selectionDelegate?.maxSelectedLimit = maxSelectionLimit
         }
     }
-    
+    ///enable disable dismiss
+    public func dismissAutomatically(isEnabled: Bool)
+    {
+        self.dismissEnabled = isEnabled
+    }
     /// Selection menu willAppear handler
     public var onWillAppear:(() -> ())?
     
@@ -280,21 +287,23 @@ extension RSSelectionMenu {
     
     /// dismiss
     public func dismiss(animated: Bool? = true) {
-        
-        DispatchQueue.main.async { [weak self] in
-            
-            // perform on dimiss operations
-            self?.menuWillDismiss()
-            
-            switch self?.menuPresentationStyle {
-            case .Push?:
-                self?.navigationController?.popViewController(animated: animated!)
-            case .Present?, .Popover?, .Formsheet?, .Alert?, .Actionsheet?:
-               self?.dismiss(animated: animated!, completion: nil)
-            case .none:
-                break
+       
+            DispatchQueue.main.async { [weak self] in
+                
+                // perform on dimiss operations
+                self?.menuWillDismiss()
+            if self?.dismissEnabled == true{
+                switch self?.menuPresentationStyle {
+                case .Push?:
+                    self?.navigationController?.popViewController(animated: animated!)
+                case .Present?, .Popover?, .Formsheet?, .Alert?, .Actionsheet?:
+                    self?.dismiss(animated: animated!, completion: nil)
+                case .none:
+                    break
+                }
             }
         }
+        
     }
 }
 
